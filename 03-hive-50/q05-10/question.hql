@@ -39,4 +39,11 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+CREATE TABLE ans AS SELECT YEAR(c4), letters, COUNT(letters)
+                    FROM tbl0 LATERAL VIEW explode(c5) tbl0 AS letters
+                    GROUP BY YEAR(c4), letters;
 
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+SELECT * FROM ans;

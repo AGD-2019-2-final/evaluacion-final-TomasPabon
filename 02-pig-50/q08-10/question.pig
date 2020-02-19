@@ -14,3 +14,15 @@ fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+data = LOAD 'data.tsv' USING PigStorage('\t')
+    AS (letter:CHARARRAY,
+        letter_list:BAG{t: tuple(a:CHARARRAY)},
+        list:MAP[]);
+
+ans = FOREACH data GENERATE FLATTEN(letter_list) AS letter_list, FLATTEN(list) AS keylist;
+
+groups = GROUP ans BY (letter_list,keylist);
+
+ans = FOREACH groups GENERATE group, COUNT(ans);
+
+STORE ans INTO 'output' using PigStorage('\t');

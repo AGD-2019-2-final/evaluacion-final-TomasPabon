@@ -30,3 +30,6 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+todate = FOREACH u GENERATE ToDate(birthday,'yyyy-MM-dd') AS date;
+todate = FOREACH todate GENERATE ToString(date,'yyyy'),ToString(date,'yy');
+STORE todate INTO 'output' USING PigStorage(',');

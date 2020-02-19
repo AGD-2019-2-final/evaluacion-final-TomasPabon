@@ -39,5 +39,13 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+CREATE TABLE ans AS SELECT c2, concat_ws(':',COLLECT_LIST(cast(c1 as STRING))) c1
+                    FROM tbl0
+                    GROUP BY c2;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+SELECT * FROM ans;
 
 
