@@ -1,13 +1,13 @@
--- 
+--
 -- Pregunta
 -- ===========================================================================
--- 
--- Para el archivo `data.tsv` Calcule la cantidad de registros por clave de la 
--- columna 3. En otras palabras, cuántos registros hay que tengan la clave 
+--
+-- Para el archivo `data.tsv` Calcule la cantidad de registros por clave de la
+-- columna 3. En otras palabras, cuántos registros hay que tengan la clave
 -- `aaa`?
--- 
+--
 -- Escriba el resultado a la carpeta `output` del directorio actual.
--- 
+--
 fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
@@ -17,12 +17,12 @@ data = LOAD 'data.tsv' USING PigStorage('\t')
         letter_list:BAG{t: tuple(a:CHARARRAY)},
         list:MAP[]);
 
-letter_list = FOREACH data GENERATE letter_list;
+list = FOREACH data GENERATE list;
 
-letters = FOREACH letter_list GENERATE FLATTEN(letter_list) AS letter;
+keyvalues = FOREACH list GENERATE FLATTEN(list) AS keyvalues;
 
-groups = GROUP letters BY letter;
+groups = GROUP keyvalues BY keyvalues;
 
-lettercount = FOREACH groups GENERATE group, COUNT(letters);
+keycount = FOREACH groups GENERATE group, COUNT(keyvalues);
 
-STORE lettercount INTO 'output' using PigStorage('\t');
+STORE keycount INTO 'output' using PigStorage(',');
